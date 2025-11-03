@@ -38,7 +38,7 @@ function getCurrentServiceInfo() {
   const hour = now.getHours();
 
   // Saturday (Sabbath) 8 AM - 5 PM
-  if (day === 1 && hour >= 0 && hour < 17) {
+  if (day === 6 && hour >= 8 && hour < 17) {
     return { serviceType: 'SABBATH_MORNING', isServiceTime: true };
   }
 

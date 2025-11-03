@@ -3,12 +3,15 @@
   "version": "1.0.0",
   "description": "Backend for University of Nairobi SDA Church Website",
   "main": "app.js",
-  "type":"module",
+  "type": "module",
   "scripts": {
     "dev": "dotenv -e .env -- nodemon app.js",
-    "start": "dotenv -e .env -- node app.js",
+    "start": "node app.js",
+    "build": "prisma generate",
+    "postinstall": "prisma generate",
     "prisma:generate": "dotenv -e .env -- prisma generate",
     "prisma:migrate": "dotenv -e .env -- prisma migrate dev",
+    "prisma:migrate:deploy": "prisma migrate deploy",
     "prisma:studio": "dotenv -e .env -- prisma studio"
   },
   "keywords": [
@@ -37,5 +40,8 @@
     "dotenv-cli": "^11.0.0",
     "nodemon": "^3.1.10",
     "typescript": "^5.9.3"
+  },
+  "engines": {
+    "node": ">=18.0.0"
   }
 }

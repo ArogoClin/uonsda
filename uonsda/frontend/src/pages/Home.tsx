@@ -289,8 +289,6 @@ export default function Home() {
               <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
                 <h3 className="text-2xl font-bold mb-2">Friends of Jesus</h3>
                 <p className="text-sm text-gray-200 mb-3">Building intimate relationships with Christ</p>
-                <div className="flex items-center text-xs">  
-                </div>
               </div>
             </div>
 
@@ -310,8 +308,6 @@ export default function Home() {
               <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
                 <h3 className="text-2xl font-bold mb-2">Ark</h3>
                 <p className="text-sm text-gray-200 mb-3">A refuge of faith and fellowship</p>
-                <div className="flex items-center text-xs">
-                </div>
               </div>
             </div>
 
@@ -331,8 +327,6 @@ export default function Home() {
               <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
                 <h3 className="text-2xl font-bold mb-2">Vineyard</h3>
                 <p className="text-sm text-gray-200 mb-3">Growing together in God's garden</p>
-                <div className="flex items-center text-xs">
-                </div>
               </div>
             </div>
 
@@ -352,8 +346,6 @@ export default function Home() {
               <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
                 <h3 className="text-2xl font-bold mb-2">Pilgrims</h3>
                 <p className="text-sm text-gray-200 mb-3">Journeying toward our heavenly home</p>
-                <div className="flex items-center text-xs">
-                </div>
               </div>
             </div>
           </div>
@@ -505,40 +497,56 @@ export default function Home() {
         </div>
       </footer>
 
-      {/* Attendance Modal */}
+      {/* Attendance Modal - FIXED */}
       {showAttendanceModal && (
-        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4 overflow-y-auto">
-          <div className="bg-white rounded-2xl max-w-2xl w-full my-8 relative animate-slideUp">
+        <div 
+          className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-4"
+          onClick={() => setShowAttendanceModal(false)}
+        >
+          <div 
+            className="bg-white rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto relative shadow-2xl"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Close Button - More Visible */}
             <button
               onClick={() => setShowAttendanceModal(false)}
-              className="absolute top-4 right-4 w-10 h-10 bg-gray-100 hover:bg-gray-200 rounded-full flex items-center justify-center transition-colors z-10"
+              className="sticky top-4 right-4 ml-auto mr-4 mt-4 w-12 h-12 bg-red-500 hover:bg-red-600 text-white rounded-full flex items-center justify-center transition-all shadow-lg z-20 transform hover:scale-110"
+              aria-label="Close modal"
             >
-              <svg className="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
               </svg>
             </button>
             
-            <div className="p-8">
+            <div className="px-8 pb-8 -mt-8">
               <AttendanceMarker />
             </div>
           </div>
         </div>
       )}
 
-      {/* Communion Modal */}
+      {/* Communion Modal - FIXED */}
       {showCommunionModal && (
-        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4 overflow-y-auto">
-          <div className="bg-white rounded-2xl max-w-2xl w-full my-8 relative animate-slideUp">
+        <div 
+          className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-4"
+          onClick={() => setShowCommunionModal(false)}
+        >
+          <div 
+            className="bg-white rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto relative shadow-2xl"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Close Button - More Visible */}
             <button
               onClick={() => setShowCommunionModal(false)}
-              className="absolute top-4 right-4 w-10 h-10 bg-gray-100 hover:bg-gray-200 rounded-full flex items-center justify-center transition-colors z-10"
+              className="sticky top-4 right-4 ml-auto mr-4 mt-4 w-12 h-12 bg-red-500 hover:bg-red-600 text-white rounded-full flex items-center justify-center transition-all shadow-lg z-20 transform hover:scale-110"
+              aria-label="Close modal"
             >
-              <svg className="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
               </svg>
             </button>
             
-            <div className="p-8">
+            <div className="px-8 pb-8 -mt-8">
               <CommunionParticipation />
             </div>
           </div>
@@ -560,6 +568,30 @@ export default function Home() {
         
         .animate-slideUp {
           animation: slideUp 0.3s ease-out;
+        }
+
+        /* Smooth scrolling for the entire page */
+        html {
+          scroll-behavior: smooth;
+        }
+
+        /* Custom scrollbar for modal */
+        .overflow-y-auto::-webkit-scrollbar {
+          width: 8px;
+        }
+
+        .overflow-y-auto::-webkit-scrollbar-track {
+          background: #f1f1f1;
+          border-radius: 10px;
+        }
+
+        .overflow-y-auto::-webkit-scrollbar-thumb {
+          background: #14b8a6;
+          border-radius: 10px;
+        }
+
+        .overflow-y-auto::-webkit-scrollbar-thumb:hover {
+          background: #0d9488;
         }
       `}</style>
     </div>
