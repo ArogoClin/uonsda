@@ -1,0 +1,172 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Member {
+  id               String           @id @default(uuid())
+  firstName        String
+  lastName         String
+  email            String           @unique
+  phone            String?
+  dateOfBirth      DateTime?
+  dateBaptised     DateTime?
+  gender           Gender?
+  address          String?
+  city             String?
+  membershipStatus MembershipStatus @default(ACTIVE)
+  dateJoined       DateTime         @default(now())
+  isLeader         Boolean          @default(false)
+  ministry         Ministry?
+  course           String?
+  faculty          String?
+  yearGroup        String?
+  createdAt        DateTime         @default(now())
+  updatedAt        DateTime         @updatedAt
+  
+  attendances      Attendance[]
+  communions       CommunionRecord[] // Track communion participation
+
+  @@map("members")
+}
+
+model Admin {
+  id        String    @id @default(uuid())
+  firstName String
+  lastName  String
+  email     String    @unique
+  password  String
+  role      AdminRole @default(CLERK)
+  phone     String?
+  isActive  Boolean   @default(true)
+  lastLogin DateTime?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  @@map("admins")
+}
+
+model Attendance {
+  id            String         @id @default(uuid())
+  memberId      String
+  member        Member         @relation(fields: [memberId], references: [id], onDelete: Cascade)
+  serviceType   ServiceType
+  attendedAt    DateTime       @default(now())
+  latitude      Float?
+  longitude     Float?
+  locationName  String?
+  isVerified    Boolean        @default(true)
+  createdAt     DateTime       @default(now())
+
+  @@map("attendances")
+  @@index([memberId])
+  @@index([attendedAt])
+}
+
+model ChurchLocation {
+  id                    String   @id @default(uuid())
+  name                  String   @unique
+  description           String?
+  latitude              Float
+  longitude             Float
+  radius                Float    @default(100)
+  address               String?
+  isActiveSabbath       Boolean  @default(false)
+  isActiveWednesday     Boolean  @default(false)
+  isActiveFriday        Boolean  @default(false)
+  isSaved               Boolean  @default(true)
+  createdBy             String?
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
+
+  @@map("church_locations")
+}
+
+model CommunionService {
+  id                  String             @id @default(uuid())
+  serviceDate         DateTime           // Date of communion service
+  quarter             Int                // 1, 2, 3, or 4
+  year                Int
+  location            String?
+  notes               String?
+  totalParticipants   Int                @default(0)
+  membersCount        Int                @default(0)
+  visitorsCount       Int                @default(0)
+  status              CommunionStatus    @default(DRAFT)  // NEW: Track if open for participation
+  recordedBy          String?            // Admin who recorded it
+  createdAt           DateTime           @default(now())
+  updatedAt           DateTime           @updatedAt
+  
+  communionRecords    CommunionRecord[]
+
+  @@map("communion_services")
+  @@index([serviceDate])
+  @@index([year, quarter])
+}
+
+model CommunionRecord {
+  id                String           @id @default(uuid())
+  communionServiceId String
+  communionService  CommunionService @relation(fields: [communionServiceId], references: [id], onDelete: Cascade)
+  
+  // For UONSDA members
+  memberId          String?
+  member            Member?          @relation(fields: [memberId], references: [id], onDelete: SetNull)
+  
+  // For visitors/non-members
+  visitorName       String?
+  visitorChurch     String?          // Their home church
+  visitorPhone      String?
+  visitorEmail      String?
+  
+  participantType   ParticipantType  // MEMBER or VISITOR
+  recordedAt        DateTime         @default(now())
+
+  @@map("communion_records")
+  @@index([communionServiceId])
+  @@index([memberId])
+}
+
+enum Ministry {
+  FOJ
+  ARK
+  VINEYARD
+  PILGRIMS
+}
+
+enum MembershipStatus {
+  ACTIVE
+  INACTIVE
+  VISITOR
+}
+
+enum Gender {
+  MALE
+  FEMALE
+}
+
+enum AdminRole {
+  ELDER
+  CLERK
+}
+
+enum ServiceType {
+  SABBATH_MORNING
+  WEDNESDAY_VESPERS
+  FRIDAY_VESPERS
+}
+
+enum ParticipantType {
+  MEMBER
+  VISITOR
+}
+
+enum CommunionStatus {
+  DRAFT      // Created but not open for participation
+  OPEN       // Open for members to participate
+  CLOSED     // Closed, no more participation allowed
+}
